@@ -1,5 +1,11 @@
 <?php
 
+//block direct URL access  to config.php & prevent db exposure
+if(!isset($_SERVER['HTTP_REFERER'])){
+    header('Location: ../login.html');
+    exit(); // Ensure script stops after redirec
+}
+
 try {
 //host
 define("HOST","localhost");
