@@ -27,7 +27,8 @@ if (isset($_POST['submit'])) {
             ]);
 
             // header("Location: " . APPURL . "login.php");
-            exit();
+            echo "<script>window.location.href='login.php';</script>";
+
 
         } else {
             echo "<script>alert('Passwords don\\'t match, please write correct password');</script>";
