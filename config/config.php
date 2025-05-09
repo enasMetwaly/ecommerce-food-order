@@ -1,10 +1,10 @@
 <?php
 
 //block direct URL access  to config.php & prevent db exposure
-// if(!isset($_SERVER['HTTP_REFERER'])){
-//     header('Location:../index.php');
-//     exit(); // Ensure script stops after redirec
-// }
+if(!isset($_SERVER['HTTP_REFERER'])){
+    header('Location:http://localhost/enasLearn/udemyCourse/Freshcery/index.php');
+    exit(); // Ensure script stops after redirec
+}
 
 try {
 //host
