@@ -63,7 +63,7 @@ define("APPURL", "http://localhost/enasLearn/udemyCourse/Freshcery/");
                         <?php else: ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <div class="avatar-header"><img src="<?php echo APPURL; ?>assets/img/logo/avatar.jpg" alt="User Avatar"></div> <?php echo htmlspecialchars($_SESSION['username']); ?>
+                                    <div class="avatar-header"><img src="<?php echo APPURL; ?>assets/img/logo/<?php echo $_SESSION['image'] ?>" alt="User Avatar"></div> <?php echo htmlspecialchars($_SESSION['username']); ?>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="<?php echo APPURL; ?>transaction.php">Transactions History</a>
