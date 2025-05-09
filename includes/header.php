@@ -1,9 +1,11 @@
-<?php 
-    define("APPURL", "http://localhost/enasLearn/udemyCourse/Freshcery/");
+<?php
+session_start();
+define("APPURL", "http://localhost/enasLearn/udemyCourse/Freshcery/");
 ?>
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Freshcery | Groceries Organic Store</title>
     <meta charset="utf-8">
@@ -22,6 +24,7 @@
     <link rel="stylesheet" type="text/css" media="all" href="<?php echo APPURL; ?>assets/css/theme.css">
 
 </head>
+
 <body>
     <div class="page-header">
         <!--=============== Navbar ===============-->
@@ -39,30 +42,41 @@
 
                 <div class="collapse navbar-collapse" id="navbarcollapse">
                     <!-- Navbar Menu -->
+
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a href="<?php echo APPURL; ?>shop.html" class="nav-link">Shop</a>
+                            <a href="<?php echo APPURL; ?>shop.php" class="nav-link">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo APPURL; ?>register.html" class="nav-link">Register</a>
+                            <a href="<?php echo APPURL; ?>faq.php" class="nav-link">FAQ</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo APPURL; ?>login.html" class="nav-link">Login</a>
+                            <a href="<?php echo APPURL; ?>contact.php" class="nav-link">Contact</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="avatar-header"><img src="<?php echo APPURL; ?>assets/img/logo/avatar.jpg"></div> John Doe
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="<?php echo APPURL; ?>transaction.html">Transactions History</a>
-                                <a class="dropdown-item" href="<?php echo APPURL; ?>setting.html">Settings</a>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a href="<?php echo APPURL; ?>cart.html" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
-                                <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
-                            </a>
-                        </li>
+                        <?php if (!isset($_SESSION['username'])) : ?>
+                            <li class="nav-item">
+                                <a href="<?php echo APPURL; ?>auth/register.php" class="nav-link">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?php echo APPURL; ?>auth/login.php" class="nav-link">Login</a>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="avatar-header"><img src="<?php echo APPURL; ?>assets/img/logo/avatar.jpg" alt="User Avatar"></div> <?php echo htmlspecialchars($_SESSION['username']); ?>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="<?php echo APPURL; ?>transaction.php">Transactions History</a>
+                                    <a class="dropdown-item" href="<?php echo APPURL; ?>setting.php">Settings</a>
+                                    <a class="dropdown-item" href="<?php echo APPURL; ?>auth/logout.php">Log out</a>
+                                </div>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?php echo APPURL; ?>cart.html" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
