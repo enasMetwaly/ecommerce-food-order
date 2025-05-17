@@ -252,7 +252,6 @@ $allFruits = $fruits->fetchAll(PDO::FETCH_OBJ);
                                 </div>
                             </div>
                         <?php endforeach  ?>
-
                     </div>
                 </div>
             </div>
