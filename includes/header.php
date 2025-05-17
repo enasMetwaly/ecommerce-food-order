@@ -31,7 +31,7 @@ define("APPURL", "http://localhost/enasLearn/udemyCourse/Freshcery/");
         <nav class="navbar fixed-top navbar-expand-md navbar-dark bg-transparent" id="page-navigation">
             <div class="container">
                 <!-- Navbar Brand -->
-                <a href="<?php echo APPURL; ?>index.html" class="navbar-brand">
+                <a href="<?php echo APPURL; ?>index.php" class="navbar-brand">
                     <img src="<?php echo APPURL; ?>assets/img/logo/logo.png" alt="">
                 </a>
 
