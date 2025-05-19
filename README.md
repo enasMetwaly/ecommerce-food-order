@@ -1,10 +1,7 @@
-# Groceries Organic Store
- It is a responsive Bootstrap 4 Ecommerce Template.
+## Groceries Store  & Food order 
+A responsive **Bootstrap 4** ecommerce template designed for an organic grocery store.
 
-[![Netlify Status]
-
-## Demo
-[See DEMO](https://groceries.teguhrianto.my.id)
-
-
+## Demo  
+[![Netlify Status](https://img.shields.io/netlify/1234567890abcdef12345678?style=flat&logo=netlify )](https://groceries.teguhrianto.my.id )
+[View Live Demo](https://groceries.teguhrianto.my.id )
 
