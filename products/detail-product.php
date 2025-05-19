@@ -1,17 +1,52 @@
 <?php require "../includes/header.php"; ?>
 <?php require "../config/config.php"; ?>
 <?php
+if (isset($_POST['submit'])) {
+    $pro_id = $_POST['pro_id'];
+    $pro_title = $_POST['pro_title'];
+    $pro_image = $_POST['pro_image'];
+    $pro_price = $_POST['pro_price'];
+    $pro_qty = $_POST['pro_qty'];
+    $user_id = $_POST['user_id'];
+
+    $insert = $conn->prepare("INSERT INTO cart (pro_id, pro_title, pro_image, pro_price, pro_qty, user_id) VALUES (:pro_id, :pro_title, :pro_image, :pro_price, :pro_qty, :user_id)");
+
+    $insert->execute([
+        ':pro_id' => $pro_id,
+        ':pro_title' => $pro_title,
+        ':pro_image' => $pro_image,
+        ':pro_price' => $pro_price,
+        ':pro_qty' => $pro_qty,
+        ':user_id' => $user_id
+    ]);
+}
+
+
+
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $select = $conn->query("SELECT * FROM products WHERE status=1 AND id='$id'");
     $select->execute();
     $product = $select->fetch(PDO::FETCH_OBJ);
 
- $relatedProducts = $conn->query("SELECT * FROM products WHERE status = 1 AND category_id = '$product->category_id' AND id != '$id' ");
- $relatedProducts->execute();
-$allrelatedProducts=$relatedProducts->fetchAll(PDO::FETCH_OBJ);
-// var_dump($allrelatedProducts);
+    $relatedProducts = $conn->query("SELECT * FROM products WHERE status = 1 AND category_id = '$product->category_id' AND id != '$id' ");
+    $relatedProducts->execute();
+    $allrelatedProducts = $relatedProducts->fetchAll(PDO::FETCH_OBJ);
+    // var_dump($allrelatedProducts);
 
+    // //validiating cart
+    // if (isset($_SESSION['user_id'])){
+    //     $validate = $conn->query("SELECT * FROM cart WHERE id='$id' AND $user_id='$_SESSION[user_id]'");
+    //     $validate->execute();
+    // }
+    // Validating cart
+    if (isset($_SESSION['user_id'])) {
+        $validate = $conn->prepare("SELECT * FROM cart WHERE pro_id = :pro_id AND user_id = :user_id");
+        $validate->execute([
+            ':pro_id' => $pro_id,
+            ':user_id' => $_SESSION['user_id']
+        ]);
+    }
 } else {
 }
 ?>
@@ -56,16 +91,53 @@ $allrelatedProducts=$relatedProducts->fetchAll(PDO::FETCH_OBJ);
                     <p class="mb-1">
                         <strong>Quantity</strong>
                     </p>
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <input class="form-control" type="number" min="1" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary" value="<?php echo $product->quantity; ?>" name="vertical-spin">
-                        </div>
-                        <div class="col-sm-6"><span class="pt-1 d-inline-block">Pack (1000 gram)</span></div>
-                    </div>
+                    <form method="POST" id="form-data">
 
-                    <button class="mt-3 btn btn-primary btn-lg">
-                        <i class="fa fa-shopping-basket"></i> Add to Cart
-                    </button>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="pro_title" value="<?php echo $product->title; ?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="pro_image" value="<?php echo $product->image; ?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="pro_price" value="<?php echo $product->price; ?>">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input class="form-control" type="text" name="pro_id" value="<?php echo $product->id; ?>">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <input class="form-control" type="number" name="pro_qty" min="1" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary" value="<?php echo $product->quantity; ?>">
+                            </div>
+                            <div class="col-sm-6"><span class="pt-1 d-inline-block">Pack (1000 gram)</span></div>
+                        </div>
+                        <?php if (isset($validate) && $validate->rowCount() > 0) : ?>
+                            <button class="mt-3 btn-insert btn btn-primary btn-lg" disabled name="submit" type="submit">
+                                <i class="fa fa-shopping-basket"></i> Add to Cart
+                            </button>
+                        <?php else: ?>
+                            <button class="mt-3 btn-insert btn btn-primary btn-lg" name="submit" type="submit">
+                                <i class="fa fa-shopping-basket"></i> Add to Cart
+                            </button>
+                        <?php endif; ?>
+
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -77,41 +149,41 @@ $allrelatedProducts=$relatedProducts->fetchAll(PDO::FETCH_OBJ);
                 <div class="col-md-12">
                     <h2 class="title">Related Products</h2>
                     <div class="product-carousel owl-carousel">
-                        <?php foreach($allrelatedProducts as $products): ?>
-                        <div class="item">
-                            <div class="card card-product">
-                                <div class="card-ribbon">
-                                    <div class="card-ribbon-container right">
-                                        <span class="ribbon ribbon-primary">SPECIAL</span>
+                        <?php foreach ($allrelatedProducts as $products): ?>
+                            <div class="item">
+                                <div class="card card-product">
+                                    <div class="card-ribbon">
+                                        <div class="card-ribbon-container right">
+                                            <span class="ribbon ribbon-primary">SPECIAL</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="card-badge">
-                                    <div class="card-badge-container left">
-                                        <span class="badge badge-default">
-                                            Until <?php echo $product->exp_date; ?>
-                                        </span>
-                                        <span class="badge badge-primary">
-                                            20% OFF
-                                        </span>
+                                    <div class="card-badge">
+                                        <div class="card-badge-container left">
+                                            <span class="badge badge-default">
+                                                Until <?php echo $product->exp_date; ?>
+                                            </span>
+                                            <span class="badge badge-primary">
+                                                20% OFF
+                                            </span>
+                                        </div>
+                                        <img src="<?php echo APPURL; ?>assets/img/<?php echo $product->image; ?>" alt="Card image 2" class="card-img-top">
                                     </div>
-                                    <img src="<?php echo APPURL;?>assets/img/<?php echo $product->image; ?>" alt="Card image 2" class="card-img-top">
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="card-title">
-                                        <a href="<?php echo APPURL; ?>detail-product.php"><?php echo $products->title; ?></a>
-                                    </h4>
-                                    <div class="card-price">
-                                        <!-- <span class="discount">Rp. 300.000</span> -->
-                                        <span class="reguler">$. <?php echo $product->price; ?></span>
-                                    </div>
-                                    <a href="<?php echo APPURL; ?>/products/detail-product.php?id=<?php echo $products->id; ?>" class="btn btn-block btn-primary">
-                                        Add to Cart
-                                    </a>
+                                    <div class="card-body">
+                                        <h4 class="card-title">
+                                            <a href="<?php echo APPURL; ?>detail-product.php"><?php echo $products->title; ?></a>
+                                        </h4>
+                                        <div class="card-price">
+                                            <!-- <span class="discount">Rp. 300.000</span> -->
+                                            <span class="reguler">$. <?php echo $product->price; ?></span>
+                                        </div>
+                                        <a href="<?php echo APPURL; ?>/products/detail-product.php?id=<?php echo $products->id; ?>" class="btn btn-block btn-primary">
+                                            Add to Cart
+                                        </a>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    
+
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -127,6 +199,21 @@ $allrelatedProducts=$relatedProducts->fetchAll(PDO::FETCH_OBJ);
             value = value.replace(/^(0*)/, "");
             $(this).val(1);
         });
+        $(".btn-insert").on("click", function(e) {
+            e.preventDefault();
+            var form_data = $("#form-data").serialize() + '&submit=submit';
+            $.ajax({
+                url: "detail-product.php?id=<?php echo $id; ?>",
+                method: "POST",
+                data: form_data,
+
+                success: function() {
+                    alert("product added to cart");
+                    $(".btn-insert").html("<i class='fa fa-shopping-basket'></i> Add to Cart").prop("disabled", true);
+                }
+            })
+
+        })
 
     })
 </script>
